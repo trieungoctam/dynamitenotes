@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Command, GitBranch, Menu, X } from "lucide-react";
+import { Command, Zap, Menu, X } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface TopNavProps {
   onOpenCommand: () => void;
@@ -23,12 +24,12 @@ export function TopNav({ onOpenCommand }: TopNavProps) {
       <div className="container flex items-center justify-between h-14 px-4 md:px-6">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-            <GitBranch className="w-4 h-4 text-primary" />
+          <div className="w-8 h-8 rounded-lg bg-foreground/5 border border-border flex items-center justify-center group-hover:bg-foreground/10 transition-colors">
+            <Zap className="w-4 h-4 text-foreground" />
           </div>
           <div className="hidden sm:flex flex-col">
-            <span className="font-mono text-xs text-muted-foreground">tuan/</span>
-            <span className="font-semibold text-sm -mt-1">ai-first-pm</span>
+            <span className="font-mono text-xs text-muted-foreground">@tam/</span>
+            <span className="font-semibold text-sm -mt-1">dynamite-notes</span>
           </div>
         </Link>
 
@@ -40,7 +41,7 @@ export function TopNav({ onOpenCommand }: TopNavProps) {
               to={item.path}
               className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                 location.pathname === item.path
-                  ? "text-primary bg-primary/10"
+                  ? "text-foreground bg-foreground/10"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
               }`}
             >
@@ -59,6 +60,8 @@ export function TopNav({ onOpenCommand }: TopNavProps) {
             <span>Search...</span>
             <kbd className="ml-2 px-1.5 py-0.5 rounded bg-muted text-xs font-mono">⌘K</kbd>
           </button>
+
+          <ThemeToggle />
           
           {/* Mobile menu button */}
           <button
@@ -81,7 +84,7 @@ export function TopNav({ onOpenCommand }: TopNavProps) {
                 onClick={() => setMobileOpen(false)}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   location.pathname === item.path
-                    ? "text-primary bg-primary/10"
+                    ? "text-foreground bg-foreground/10"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                 }`}
               >
