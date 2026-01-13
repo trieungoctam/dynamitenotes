@@ -1,86 +1,158 @@
+/**
+ * DYNAMITE NOTES - BRUTALIST EDITORIAL DESIGN
+ * ===========================================
+ * A stark black & white aesthetic with:
+ * - Extreme contrast (0% and 100% only)
+ * - Bold, oversized typography
+ * - Sharp geometric borders
+ * - Grid-based layouts
+ * - Minimal color palette
+ * - Intentional visual tension
+ */
+
+/* ========================================
+   TYPOGRAPHY - Distinctive Font Choices
+   ======================================== */
+
+/* Primary Display: Monument Extended or similar bold font */
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/clash-display-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* Body: Satoshi for refined readability */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-500.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* Mono: Geist Mono for code and technical content */
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/geist-mono-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* Tailwind base */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ========================================
+   DESIGN TOKENS - Pure Black & White
+   ======================================== */
+
 @layer base {
   :root {
+    /* Pure black & white palette - no grays, no compromise */
     --background: 0 0% 100%;
-    --foreground: 0 0% 4%;
+    --foreground: 0 0% 0%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 4%;
+    --card-foreground: 0 0% 0%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 4%;
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 0 0% 45%;
+    --primary: 0 0% 0%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary-foreground: 0 0% 0%;
 
     --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted-foreground: 0 0% 0%;
+    --muted-alpha: 0 0% 0% / 0.5;
 
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 0 0% 0%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 46%;
+    --destructive: 0 0% 0%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 0 0% 90%;
     --input: 0 0% 90%;
-    --ring: 0 0% 45%;
+    --ring: 0 0% 0%;
 
-    --radius: 0.5rem;
+    /* Spacing scale - brutalist grid system */
+    --radius: 0rem;
+    --radius-sm: 0rem;
+    --radius-md: 0rem;
+    --radius-lg: 0rem;
 
-    /* Custom tokens */
-    --glow: 0 0% 45%;
-    --surface: 0 0% 98%;
-    --surface-elevated: 0 0% 100%;
+    /* Custom brutalist tokens */
+    --glow: 0 0% 0%;
+    --surface: 0 0% 100%;
+    --surface-elevated: 0 0% 98%;
     --code-bg: 0 0% 96%;
-    --success: 142 76% 36%;
-    --warning: 38 92% 50%;
+    --success: 0 0% 0%;
+    --warning: 0 0% 0%;
+
+    /* Animation timing - snappy, deliberate */
+    --ease-brutal: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-sharp: cubic-bezier(0.07, 0.94, 0.09, 0.98);
   }
 
   .dark {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 98%;
+    /* Dark mode: inverted pure black & white */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
 
-    --card: 0 0% 4%;
-    --card-foreground: 0 0% 98%;
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 0 0% 4%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 0%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 0 0% 45%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
 
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 64%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 100%;
+    --muted-alpha: 0 0% 100% / 0.5;
 
-    --accent: 0 0% 25%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 0 0% 100%;
+    --accent-foreground: 0 0% 0%;
 
-    --destructive: 0 72% 70%;
-    --destructive-foreground: 0 0% 4%;
+    --destructive: 0 0% 100%;
+    --destructive-foreground: 0 0% 0%;
 
-    --border: 0 0% 22%;
-    --input: 0 0% 22%;
-    --ring: 0 0% 45%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 0 0% 100%;
 
-    /* Custom tokens */
-    --glow: 0 0% 60%;
-    --surface: 0 0% 6%;
-    --surface-elevated: 0 0% 9%;
-    --code-bg: 0 0% 12%;
-    --success: 142 76% 45%;
-    --warning: 38 92% 50%;
+    /* Custom brutalist tokens */
+    --glow: 0 0% 100%;
+    --surface: 0 0% 0%;
+    --surface-elevated: 0 0% 5%;
+    --code-bg: 0 0% 10%;
+    --success: 0 0% 100%;
+    --warning: 0 0% 100%;
   }
 }
+
+/* ========================================
+   BASE STYLES - Foundation
+   ======================================== */
 
 @layer base {
   * {
@@ -89,111 +161,265 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Geist Mono', monospace;
+    font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Typography hierarchy - brutalist scale */
+  h1, h2, h3, h4, h5, h6, .font-display {
+    font-family: 'Clash Display', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+  }
+
+  h1 {
+    font-size: clamp(3rem, 12vw, 10rem);
+  }
+
+  h2 {
+    font-size: clamp(2rem, 8vw, 6rem);
+  }
+
+  h3 {
+    font-size: clamp(1.5rem, 5vw, 3rem);
   }
 
   .font-mono {
-    font-family: 'Geist Mono', monospace;
+    font-family: 'Geist Mono', ui-monospace, monospace;
   }
 
   .font-sans {
-    font-family: 'Geist Mono', monospace;
+    font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
-  .font-serif {
-    font-family: 'Geist Mono', monospace;
+  /* Touch targets - mobile accessibility */
+  @media (max-width: 767px) {
+    button, .btn, a.btn, [role="button"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
   }
 }
 
+/* ========================================
+   COMPONENTS - Brutalist Elements
+   ======================================== */
+
 @layer components {
-  .glow-text {
-    text-shadow: 0 0 20px hsl(var(--foreground) / 0.2);
+  /* Sharp border boxes - no radius */
+  .brutal-box {
+    @apply bg-card border-2 border-foreground p-6;
+    box-shadow: 4px 4px 0 0 hsl(var(--foreground));
   }
 
-  .glow-box {
-    box-shadow: 0 0 30px -10px hsl(var(--foreground) / 0.15);
+  .brutal-box-sm {
+    @apply bg-card border-2 border-foreground p-4;
+    box-shadow: 3px 3px 0 0 hsl(var(--foreground));
   }
 
-  .glass {
-    @apply bg-surface-elevated/80 backdrop-blur-xl border border-border/50;
+  /* Brutalist buttons - bold outlines */
+  .brutal-btn {
+    @apply inline-flex items-center justify-center px-8 py-4;
+    @apply bg-transparent border-2 border-foreground text-foreground font-bold;
+    transition: all 150ms cubic-bezier(0.07, 0.94, 0.09, 0.98);
+    box-shadow: 4px 4px 0 0 hsl(var(--foreground));
   }
 
-  .glass-hover {
-    @apply hover:bg-surface-elevated hover:border-foreground/20 transition-all duration-300;
+  .brutal-btn:hover {
+    @apply bg-foreground text-background;
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 0 hsl(var(--foreground));
   }
 
-  .gradient-text {
-    @apply text-foreground;
+  .brutal-btn:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 0 hsl(var(--foreground));
   }
 
-  .gradient-border {
+  /* Small brutalist button */
+  .brutal-btn-sm {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm;
+    @apply bg-transparent border-2 border-foreground text-foreground font-bold;
+    transition: all 150ms cubic-bezier(0.07, 0.94, 0.09, 0.98);
+    box-shadow: 2px 2px 0 0 hsl(var(--foreground));
+  }
+
+  .brutal-btn-sm:hover {
+    @apply bg-foreground text-background;
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 0 hsl(var(--foreground));
+  }
+
+  .brutal-btn-sm:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 0 hsl(var(--foreground));
+  }
+
+  /* Filled brutalist button */
+  .brutal-btn-filled {
+    @apply inline-flex items-center justify-center px-8 py-4;
+    @apply bg-foreground text-background border-2 border-foreground font-bold;
+    transition: all 150ms cubic-bezier(0.07, 0.94, 0.09, 0.98);
+    box-shadow: 4px 4px 0 0 hsl(var(--foreground));
+  }
+
+  .brutal-btn-filled:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 0 hsl(var(--foreground));
+  }
+
+  .brutal-btn-filled:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 0 hsl(var(--foreground));
+  }
+
+  /* Grid backgrounds - geometric patterns */
+  .grid-brutal {
+    background-image:
+      linear-gradient(hsl(var(--border)) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: -1px -1px;
+  }
+
+  /* Marquee text - scrolling typography */
+  .marquee-text {
+    @apply text-6xl md:text-8xl font-display font-bold whitespace-nowrap;
+    animation: marquee 20s linear infinite;
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* Strikethrough hover effect */
+  .strike-hover {
     position: relative;
   }
 
-  .gradient-border::before {
+  .strike-hover::after {
     content: '';
     position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(135deg, hsl(var(--foreground) / 0.2), hsl(var(--foreground) / 0.05));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
+    left: 0;
+    top: 50%;
+    width: 0;
+    height: 3px;
+    background: hsl(var(--foreground));
+    transition: width 0.2s cubic-bezier(0.07, 0.94, 0.09, 0.98);
   }
 
+  .strike-hover:hover::after {
+    width: 100%;
+  }
+
+  /* Outline text */
+  .text-outline {
+    -webkit-text-stroke: 2px hsl(var(--foreground));
+    color: transparent;
+  }
+
+  .dark .text-outline {
+    -webkit-text-stroke: 2px hsl(var(--foreground));
+  }
+
+  /* Glitch effect on hover */
+  .glitch-hover {
+    position: relative;
+  }
+
+  .glitch-hover:hover {
+    animation: glitch 0.3s cubic-bezier(0.07, 0.94, 0.09, 0.98);
+  }
+
+  @keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+  }
+
+  /* Split layout - brutalist asymmetric */
+  .split-brutal {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+  }
+
+  .split-brutal > * {
+    border: 2px solid hsl(var(--foreground));
+  }
+
+  /* Code label - monospace tag */
   .code-label {
-    @apply font-mono text-xs px-2 py-0.5 rounded bg-code-bg text-muted-foreground;
+    @apply font-mono text-xs px-2 py-1 text-foreground border border-foreground;
+    background-color: hsl(var(--code-bg));
   }
 
-  .file-tree-item {
-    @apply flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-pointer;
-  }
-
-  .file-tree-item.active {
-    @apply text-foreground bg-muted;
+  /* Legacy components updated for brutalist */
+  .glass {
+    @apply bg-card border-2 border-foreground;
   }
 
   .mode-card {
-    @apply relative overflow-hidden rounded-lg p-6 cursor-pointer transition-all duration-300;
-    @apply bg-surface-elevated border border-border hover:border-foreground/30;
+    @apply relative overflow-hidden p-6 cursor-pointer;
+    @apply bg-card border-2 border-foreground;
+    transition: all 150ms cubic-bezier(0.07, 0.94, 0.09, 0.98);
+    box-shadow: 4px 4px 0 0 hsl(var(--foreground));
   }
 
   .mode-card:hover {
-    @apply shadow-[0_0_40px_-15px_hsl(var(--foreground)/0.15)];
-  }
-
-  .mode-card::before {
-    content: '';
-    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
-    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), hsl(var(--foreground) / 0.03), transparent 50%);
-  }
-
-  .mode-card:hover::before {
-    @apply opacity-100;
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 0 hsl(var(--foreground));
   }
 
   .command-palette {
     @apply fixed inset-0 z-50 flex items-start justify-center pt-[20vh];
-    background: hsl(var(--background) / 0.9);
-    backdrop-filter: blur(8px);
+    background: hsl(var(--background) / 0.95);
   }
 
   .command-input {
-    @apply w-full bg-transparent border-none outline-none text-lg placeholder:text-muted-foreground font-mono;
+    @apply w-full bg-transparent border-none outline-none text-lg font-mono;
+    &::placeholder {
+      color: hsl(var(--muted-alpha));
+    }
+  }
+
+  /* Masonry grid */
+  .my-masonry-grid {
+    display: flex;
+    margin-left: -20px;
+    width: auto;
+  }
+
+  .my-masonry-grid_column {
+    padding-left: 20px;
+  }
+
+  .my-masonry-grid_column > div {
+    margin-bottom: 20px;
   }
 }
 
+/* ========================================
+   UTILITIES - Animations & Effects
+   ======================================== */
+
 @layer utilities {
+  /* Snappy animations */
   .animate-in {
-    animation: animate-in 0.2s ease-out;
+    animation: animate-in 0.3s var(--ease-brutal) forwards;
   }
 
   @keyframes animate-in {
     from {
       opacity: 0;
-      transform: translateY(-4px);
+      transform: translateY(30px);
     }
     to {
       opacity: 1;
@@ -201,30 +427,130 @@
     }
   }
 
-  .animate-pulse-slow {
-    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  .animate-slide-up {
+    animation: slide-up 0.5s var(--ease-brutal) forwards;
   }
 
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(100px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.3s var(--ease-sharp) forwards;
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Stagger delays */
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+  .delay-600 { animation-delay: 600ms; }
+  .delay-700 { animation-delay: 700ms; }
+
+  /* Initial hidden state */
+  .animate-hidden {
+    opacity: 0;
+  }
+
+  /* Background patterns */
   .bg-grid {
-    background-image: 
-      linear-gradient(hsl(var(--border) / 0.5) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(var(--border) / 0.5) 1px, transparent 1px);
+    background-image:
+      linear-gradient(hsl(var(--foreground) / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--foreground) / 0.05) 1px, transparent 1px);
     background-size: 40px 40px;
   }
 
-  .bg-surface {
-    background-color: hsl(var(--surface));
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.04;
   }
 
-  .bg-surface-elevated {
-    background-color: hsl(var(--surface-elevated));
+  /* Lines and dividers */
+  .line-h {
+    @apply w-full h-px bg-foreground;
   }
 
-  .bg-code-bg {
-    background-color: hsl(var(--code-bg));
+  .line-v {
+    @apply h-full w-px bg-foreground;
   }
 
-  .text-glow {
-    color: hsl(var(--glow));
+  /* Typography utilities */
+  .text-editorial-xl {
+    font-size: clamp(4rem, 15vw, 12rem);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+  }
+
+  .text-editorial-lg {
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+  }
+
+  .text-display {
+    font-family: 'Clash Display', sans-serif;
+    font-weight: 700;
+  }
+
+  /* Hover effects */
+  .hover-lift {
+    transition: transform 0.2s cubic-bezier(0.07, 0.94, 0.09, 0.98);
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Cursor styles */
+  .cursor-crosshair {
+    cursor: crosshair;
+  }
+
+  /* Spin animation for loading */
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+
+  /* Float animation */
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
   }
 }
