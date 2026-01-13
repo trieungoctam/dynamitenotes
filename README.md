@@ -1,73 +1,81 @@
-# Welcome to your Lovable project
+# Troika Three Text Setup with React, TypeScript, and Vite
 
-## Project info
+This guide outlines the steps to integrate `troika-three-text` for high-quality 3D text rendering in a React application set up with TypeScript and Vite.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 1. Project Setup
 
-## How can I edit this code?
+Start by creating a new Vite project with the React and TypeScript template:
 
-There are several ways of editing your application.
+```bash
+npm create vite@latest my-three-text-app -- --template react-ts
+cd my-three-text-app
+npm install
+```
 
-**Use Lovable**
+## 2. Install Dependencies
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+Install the necessary libraries: `three`, `@react-three/fiber`, `@react-three/drei`, and `troika-three-text`.
 
-Changes made via Lovable will be committed automatically to this repo.
+```bash
+npm install three @react-three/fiber @react-three/drei troika-three-text
+```
 
-**Use your preferred IDE**
+## 3. Basic Usage
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Integrate `troika-three-text` within your `src/App.tsx` file using `@react-three/drei`'s `Text` component:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```tsx
+import React, { useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, Text } from '@react-three/drei';
+import * as THREE from 'three';
 
-Follow these steps:
+function AnimatedText() {
+  const textRef = useRef<THREE.Mesh>(null);
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+  useFrame(({ clock }) => {
+    if (textRef.current) {
+      textRef.current.rotation.y = clock.getElapsedTime() * 0.5;
+    }
+  });
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+  return (
+    <Text
+      ref={textRef}
+      position={[0, 0, 0]}
+      fontSize={0.5}
+      color="hotpink"
+      anchorX="center"
+      anchorY="middle"
+    >
+      Hello Troika!
+      <meshBasicMaterial attach="material" color="hotpink" />
+    </Text>
+  );
+}
 
-# Step 3: Install the necessary dependencies.
-npm i
+function App() {
+  return (
+    <div style={{ width: '100vw', height: '100vh', background: '#222' }}>
+      <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
+        <ambientLight intensity={0.5} />
+        <pointLight position={[10, 10, 10]} />
+        <AnimatedText />
+        <OrbitControls />
+      </Canvas>
+    </div>
+  );
+}
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+export default App;
+```
+
+## 4. Run the Development Server
+
+Execute the following command to start your development server and view the application:
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+This setup leverages `Canvas` from `@react-three/fiber` for scene management, `OrbitControls` from `@react-three/drei` for camera interaction, and the `Text` component from `@react-three/drei` as a wrapper for `troika-three-text`'s `TextMesh` object, simplifying 3D text integration.

@@ -15,4 +15,19 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    // Code splitting optimizations
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Vendor chunks for better caching
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select', '@radix-ui/react-tooltip'],
+          'query-vendor': ['@tanstack/react-query'],
+        },
+      },
+    },
+    // Optimize chunk size
+    chunkSizeWarningLimit: 500,
+  },
 }));
