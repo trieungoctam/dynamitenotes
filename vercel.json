@@ -1,0 +1,73 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "buildCommand": "bun run build",
+  "outputDirectory": "dist",
+  "installCommand": "bun install",
+  "redirects": [
+    {
+      "source": "/packages",
+      "destination": "/posts",
+      "permanent": true
+    },
+    {
+      "source": "/packages/:path*",
+      "destination": "/posts",
+      "permanent": true
+    },
+    {
+      "source": "/docs",
+      "destination": "/posts",
+      "permanent": true
+    },
+    {
+      "source": "/docs/:path*",
+      "destination": "/posts",
+      "permanent": true
+    },
+    {
+      "source": "/playground",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/changelog",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ]
+}

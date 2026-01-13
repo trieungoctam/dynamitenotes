@@ -1,0 +1,195 @@
+// DYNAMITE NOTES - PRISMA SCHEMA
+// Migrated from scripts/schema.sql
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum TaxonomyType {
+  goal
+  outcome
+}
+
+enum PostLevel {
+  starter
+  builder
+  advanced
+}
+
+enum ResumeSectionType {
+  highlight
+  experience
+  project
+  writing
+  speaking
+}
+
+// ============================================
+// TAXONOMY TABLE (Goals & Outcomes)
+// ============================================
+
+model Taxonomy {
+  id           String        @id @default(uuid())
+  type         TaxonomyType
+  slug         String        @unique
+  nameVi       String        @map("name_vi")
+  nameEn       String        @map("name_en")
+  descriptionVi String?      @map("description_vi")
+  descriptionEn String?      @map("description_en")
+  icon         String?
+  color        String?
+  sortOrder    Int           @default(0) @map("sort_order")
+  createdAt    DateTime      @default(now()) @map("created_at")
+
+  // Relations
+  goalsAsGoal  Post[]        @relation("PostGoal")
+  goalsAsOutcome Post[]      @relation("PostOutcome")
+
+  @@map("taxonomy")
+}
+
+// ============================================
+// POSTS TABLE
+// ============================================
+
+model Post {
+  id          String        @id @default(uuid())
+  slug        String        @unique
+  titleVi     String        @map("title_vi")
+  titleEn     String?       @map("title_en")
+  contentVi   String        @map("content_vi")
+  contentEn   String?       @map("content_en")
+  excerptVi   String?       @map("excerpt_vi")
+  excerptEn   String?       @map("excerpt_en")
+  level       PostLevel?
+  readTime    Int?          @map("read_time")
+  featured    Boolean       @default(false)
+  published   Boolean       @default(false)
+  publishedAt DateTime?     @map("published_at")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  // Relations
+  goal        Taxonomy?     @relation("PostGoal", fields: [goalId], references: [id], onDelete: SetNull)
+  goalId      String?       @map("goal_id")
+  outcome     Taxonomy?     @relation("PostOutcome", fields: [outcomeId], references: [id], onDelete: SetNull)
+  outcomeId   String?       @map("outcome_id")
+  relatedInsights Insight[] @relation("PostInsights")
+
+  @@map("posts")
+}
+
+// ============================================
+// INSIGHTS TABLE
+// ============================================
+
+model Insight {
+  id            String      @id @default(uuid())
+  contentVi     String      @map("content_vi")
+  contentEn     String?     @map("content_en")
+  tags          String[]
+  pinned        Boolean     @default(false)
+  published     Boolean     @default(false)
+  publishedAt   DateTime?   @map("published_at")
+  createdAt     DateTime    @default(now()) @map("created_at")
+
+  // Relations
+  relatedPost   Post?       @relation("PostInsights", fields: [relatedPostId], references: [id], onDelete: SetNull)
+  relatedPostId String?     @map("related_post_id")
+
+  @@map("insights")
+}
+
+// ============================================
+// PHOTOS TABLE
+// ============================================
+
+model Photo {
+  id            String      @id @default(uuid())
+  url           String
+  thumbnailUrl  String?     @map("thumbnail_url")
+  captionVi     String?     @map("caption_vi")
+  captionEn     String?     @map("caption_en")
+  album         String?
+  sortOrder     Int         @default(0) @map("sort_order")
+  published     Boolean     @default(false)
+  takenAt       DateTime?   @map("taken_at")
+  createdAt     DateTime    @default(now()) @map("created_at")
+
+  @@map("photos")
+}
+
+// ============================================
+// SERIES TABLE
+// ============================================
+
+model Series {
+  id          String      @id @default(uuid())
+  slug        String      @unique
+  titleVi     String      @map("title_vi")
+  titleEn     String?     @map("title_en")
+  descriptionVi String?   @map("description_vi")
+  descriptionEn String?   @map("description_en")
+  postIds     String[]    @default([]) @map("post_ids")
+  coverImage  String?     @map("cover_image")
+  featured    Boolean     @default(false)
+  published   Boolean     @default(false)
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  @@map("series")
+}
+
+// ============================================
+// ABOUT TABLE
+// ============================================
+
+model About {
+  id            String      @id @default(uuid())
+  bioVi         String      @map("bio_vi")
+  bioEn         String?     @map("bio_en")
+  principlesVi  String?     @map("principles_vi")
+  principlesEn  String?     @map("principles_en")
+  socialLinks   Json        @map("social_links")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+
+  @@map("about")
+}
+
+// ============================================
+// RESUME SECTIONS TABLE
+// ============================================
+
+model ResumeSection {
+  id          String          @id @default(uuid())
+  type        ResumeSectionType
+  titleVi     String          @map("title_vi")
+  titleEn     String?         @map("title_en")
+  content     Json
+  sortOrder   Int             @default(0) @map("sort_order")
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+
+  @@map("resume_sections")
+}
+
+// ============================================
+// ADMINS TABLE
+// ============================================
+
+model Admin {
+  userId    String      @id @map("user_id")
+  createdAt DateTime    @default(now()) @map("created_at")
+
+  @@map("admins")
+}
