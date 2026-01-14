@@ -73,6 +73,7 @@ export type Database = {
           featured: boolean;
           published: boolean;
           published_at: string | null;
+                    cover_image: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -92,6 +93,8 @@ export type Database = {
           featured?: boolean;
           published?: boolean;
           published_at?: string | null;
+          scheduled_for?: string | null;
+          cover_image?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -111,8 +114,100 @@ export type Database = {
           featured?: boolean;
           published?: boolean;
           published_at?: string | null;
+          scheduled_for?: string | null;
+          cover_image?: string | null;
           created_at?: string;
           updated_at?: string;
+        };
+      };
+      tags: {
+        Row: {
+          id: string;
+          slug: string;
+          name_vi: string;
+          name_en: string | null;
+          color: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          name_vi: string;
+          name_en?: string | null;
+          color?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          name_vi?: string;
+          name_en?: string | null;
+          color?: string | null;
+          created_at?: string;
+        };
+      };
+      post_tags: {
+        Row: {
+          post_id: string;
+          tag_id: string;
+          created_at: string;
+        };
+        Insert: {
+          post_id: string;
+          tag_id: string;
+          created_at?: string;
+        };
+        Update: {
+          post_id?: string;
+          tag_id?: string;
+          created_at?: string;
+        };
+      };
+      post_versions: {
+        Row: {
+          id: string;
+          post_id: string;
+          title_vi: string;
+          title_en: string | null;
+          content_vi: string;
+          content_en: string | null;
+          excerpt_vi: string | null;
+          excerpt_en: string | null;
+          cover_image: string | null;
+          change_reason: string | null;
+          version: number;
+          created_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          post_id: string;
+          title_vi: string;
+          title_en?: string | null;
+          content_vi: string;
+          content_en?: string | null;
+          excerpt_vi?: string | null;
+          excerpt_en?: string | null;
+          cover_image?: string | null;
+          change_reason?: string | null;
+          version?: number;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          post_id?: string;
+          title_vi?: string;
+          title_en?: string | null;
+          content_vi?: string;
+          content_en?: string | null;
+          excerpt_vi?: string | null;
+          excerpt_en?: string | null;
+          cover_image?: string | null;
+          change_reason?: string | null;
+          version?: number;
+          created_by?: string | null;
+          created_at?: string;
         };
       };
       insights: {
@@ -295,16 +390,42 @@ export type Database = {
       };
       admins: {
         Row: {
-          user_id: string;
+          profile_id: string;
           created_at: string;
         };
         Insert: {
-          user_id: string;
+          profile_id: string;
           created_at?: string;
         };
         Update: {
-          user_id?: string;
+          profile_id?: string;
           created_at?: string;
+        };
+      };
+      profiles: {
+        Row: {
+          id: string;
+          username: string;
+          password_hash: string;
+          email: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          username: string;
+          password_hash: string;
+          email?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          username?: string;
+          password_hash?: string;
+          email?: string | null;
+          created_at?: string;
+          updated_at?: string;
         };
       };
     };
@@ -331,3 +452,7 @@ export type Taxonomy = Tables<"taxonomy">;
 export type ResumeSection = Tables<"resume_sections">;
 export type About = Tables<"about">;
 export type Admin = Tables<"admins">;
+export type Tag = Tables<"tags">;
+export type PostTag = Tables<"post_tags">;
+export type PostVersion = Tables<"post_versions">;
+export type Profile = Tables<"profiles">;

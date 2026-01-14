@@ -44,7 +44,7 @@ export function PostCard({ post, index = 0, variant = "default" }: PostCardProps
           {/* Metadata row */}
           <div className="flex items-center gap-4 mb-6 text-sm font-mono">
             {post.published_at && (
-              <span className="flex items-center gap-2 opacity-70">
+              <span className="flex items-center gap-2 text-muted-foreground">
                 <Calendar className="w-4 h-4" />
                 {new Date(post.published_at).toLocaleDateString("en-US", {
                   month: "short",
@@ -54,7 +54,7 @@ export function PostCard({ post, index = 0, variant = "default" }: PostCardProps
               </span>
             )}
             {post.read_time && (
-              <span className="flex items-center gap-2 opacity-70">
+              <span className="flex items-center gap-2 text-muted-foreground">
                 <Clock className="w-4 h-4" />
                 {post.read_time}m
               </span>
@@ -68,7 +68,7 @@ export function PostCard({ post, index = 0, variant = "default" }: PostCardProps
 
           {/* Excerpt */}
           {excerpt && (
-            <p className="text-base md:text-lg opacity-70 leading-relaxed mb-6 line-clamp-3 max-w-2xl">
+            <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-6 line-clamp-3 max-w-2xl">
               {excerpt}
             </p>
           )}
@@ -118,7 +118,7 @@ export function PostCard({ post, index = 0, variant = "default" }: PostCardProps
           </h3>
 
           {/* Metadata */}
-          <div className="flex items-center gap-3 text-xs font-mono opacity-60">
+          <div className="flex items-center gap-3 text-xs font-mono text-muted-foreground/70">
             {post.published_at && (
               <span>
                 {new Date(post.published_at).toLocaleDateString("en-US", {
@@ -163,7 +163,7 @@ export function PostCard({ post, index = 0, variant = "default" }: PostCardProps
 
       <div className="relative z-10">
         {/* Metadata row */}
-        <div className="flex items-center gap-3 mb-4 text-xs font-mono opacity-50">
+        <div className="flex items-center gap-3 mb-4 text-xs font-mono text-muted-foreground/60">
           {post.published_at && (
             <span>
               {new Date(post.published_at).toLocaleDateString("en-US", {
@@ -184,7 +184,7 @@ export function PostCard({ post, index = 0, variant = "default" }: PostCardProps
 
         {/* Excerpt */}
         {excerpt && (
-          <p className="text-sm opacity-60 leading-relaxed mb-4 line-clamp-2">
+          <p className="text-sm text-muted-foreground leading-relaxed mb-4 line-clamp-2">
             {excerpt}
           </p>
         )}

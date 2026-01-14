@@ -1,6 +1,6 @@
 /**
  * Login Page
- * Admin login form for accessing the admin panel.
+ * Admin login form with username and password.
  */
 
 import { useState } from "react";
@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Zap } from "lucide-react";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -29,7 +29,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const { error: signInError } = await signIn(email, password);
+      const { error: signInError } = await signIn(username, password);
 
       if (signInError) {
         setError(signInError.message);
@@ -59,14 +59,15 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="username">Username</Label>
             <Input
-              id="email"
-              type="email"
-              placeholder="admin@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="username"
+              type="text"
+              placeholder="admin"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
+              autoComplete="username"
             />
           </div>
 
@@ -79,6 +80,7 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              autoComplete="current-password"
             />
           </div>
 

@@ -20,7 +20,7 @@ export function useAdminPosts() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("posts")
-        .select("*, goal:taxonomy!goal_id(*), outcome:taxonomy!outcome_id(*)")
+        .select("*, goal:taxonomy!goal_id(*), outcome:taxonomy!outcome_id(*), tags:post_tags(tag:tags(*))")
         .order("updated_at", { ascending: false });
       if (error) throw error;
       return data;
@@ -37,7 +37,7 @@ export function useAdminPost(id: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("posts")
-        .select("*")
+        .select("*, tags:post_tags(tag:tags(*))")
         .eq("id", id)
         .single();
       if (error) throw error;
@@ -74,13 +74,49 @@ export function useCreatePost() {
 }
 
 /**
- * Update existing post
+ * Update existing post (creates version snapshot)
  */
 export function useUpdatePost() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, ...post }: PostUpdate & { id: string }) => {
+    mutationFn: async ({ id, ...post }: PostUpdate & { id: string; changeReason?: string }) => {
+      // Fetch current post for version snapshot
+      const { data: currentPost } = await supabase
+        .from("posts")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (currentPost) {
+        // Get latest version number
+        const { data: latestVersion } = await supabase
+          .from("post_versions")
+          .select("version")
+          .eq("post_id", id)
+          .order("version", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        const nextVersion = (latestVersion?.version || 0) + 1;
+
+        // Create version snapshot before update
+        await supabase
+          .from("post_versions")
+          .insert({
+            post_id: id,
+            title_vi: currentPost.title_vi,
+            title_en: currentPost.title_en,
+            content_vi: currentPost.content_vi,
+            content_en: currentPost.content_en,
+            excerpt_vi: currentPost.excerpt_vi,
+            excerpt_en: currentPost.excerpt_en,
+            cover_image: currentPost.cover_image,
+            change_reason: post.changeReason || "Updated",
+            version: nextVersion,
+          });
+      }
+
       const { data, error } = await supabase
         .from("posts")
         .update(post)
@@ -93,6 +129,7 @@ export function useUpdatePost() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["admin", "posts"] });
       queryClient.invalidateQueries({ queryKey: ["admin", "post", data.id] });
+      queryClient.invalidateQueries({ queryKey: ["post-versions", data.id] });
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["post", data.slug] });
     },

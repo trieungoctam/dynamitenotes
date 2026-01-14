@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   ChevronLeft,
   ChevronRight,
@@ -41,6 +42,9 @@ interface DataTableProps<T> {
   onRowClick?: (item: T) => void;
   actions?: (item: T) => React.ReactNode;
   emptyMessage?: string;
+  selectable?: boolean;
+  selectedIds?: Set<string>;
+  onSelectionChange?: (ids: Set<string>) => void;
 }
 
 type SortDirection = "asc" | "desc" | null;
@@ -54,6 +58,9 @@ export function DataTable<T extends Record<string, unknown>>({
   onRowClick,
   actions,
   emptyMessage = "No items found",
+  selectable = false,
+  selectedIds = new Set(),
+  onSelectionChange,
 }: DataTableProps<T>) {
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<string | null>(null);
@@ -108,6 +115,29 @@ export function DataTable<T extends Record<string, unknown>>({
     }
   };
 
+  // Selection handlers
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      const allIds = new Set(paginatedData.map(item => String(item.id)));
+      onSelectionChange?.(allIds);
+    } else {
+      onSelectionChange?.(new Set());
+    }
+  };
+
+  const handleSelectRow = (id: string, checked: boolean) => {
+    const newSelected = new Set(selectedIds);
+    if (checked) {
+      newSelected.add(id);
+    } else {
+      newSelected.delete(id);
+    }
+    onSelectionChange?.(newSelected);
+  };
+
+  const isAllSelected = paginatedData.length > 0 && paginatedData.every(item => selectedIds.has(String(item.id)));
+  const isSomeSelected = selectedIds.size > 0 && !isAllSelected;
+
   const SortIcon = ({ columnKey }: { columnKey: string }) => {
     if (sortKey !== columnKey) return <ArrowUpDown className="w-4 h-4 ml-1 opacity-50" />;
     if (sortDir === "asc") return <ArrowUp className="w-4 h-4 ml-1" />;
@@ -137,6 +167,16 @@ export function DataTable<T extends Record<string, unknown>>({
         <Table>
           <TableHeader>
             <TableRow>
+              {selectable && (
+                <TableHead className="w-12">
+                  <Checkbox
+                    checked={isAllSelected}
+                    indeterminate={isSomeSelected ? true : undefined}
+                    onCheckedChange={handleSelectAll}
+                    aria-label="Select all"
+                  />
+                </TableHead>
+              )}
               {columns.map((col) => (
                 <TableHead
                   key={col.key}
@@ -157,7 +197,11 @@ export function DataTable<T extends Record<string, unknown>>({
             {paginatedData.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length + (actions ? 1 : 0)}
+                  colSpan={
+                    columns.length +
+                    (actions ? 1 : 0) +
+                    (selectable ? 1 : 0)
+                  }
                   className="text-center text-muted-foreground py-8"
                 >
                   {emptyMessage}
@@ -170,6 +214,17 @@ export function DataTable<T extends Record<string, unknown>>({
                   onClick={() => onRowClick?.(item)}
                   className={onRowClick ? "cursor-pointer hover:bg-muted/50" : ""}
                 >
+                  {selectable && (
+                    <TableCell onClick={(e) => e.stopPropagation()}>
+                      <Checkbox
+                        checked={selectedIds.has(String(item.id))}
+                        onCheckedChange={(checked) =>
+                          handleSelectRow(String(item.id), !!checked)
+                        }
+                        aria-label={`Select ${item.id}`}
+                      />
+                    </TableCell>
+                  )}
                   {columns.map((col) => (
                     <TableCell key={col.key} className={col.className}>
                       {col.render

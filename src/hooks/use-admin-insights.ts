@@ -19,8 +19,8 @@ export function useAdminInsights() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("insights")
-        .select("*, related_post:posts!related_post_id(id, title_vi, slug)")
-        .order("updated_at", { ascending: false });
+        .select("*, related_post:posts(*)")
+        .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
     },

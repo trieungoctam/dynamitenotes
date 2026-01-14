@@ -35,6 +35,41 @@ enum ResumeSectionType {
 }
 
 // ============================================
+// TAGS TABLE
+// ============================================
+
+model Tag {
+  id        String    @id @default(uuid())
+  slug      String    @unique
+  nameVi    String    @map("name_vi")
+  nameEn    String?   @map("name_en")
+  color     String?
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  posts     PostTag[]
+
+  @@map("tags")
+}
+
+// ============================================
+// POST TAGS JUNCTION TABLE
+// ============================================
+
+model PostTag {
+  postId    String    @map("post_id")
+  tagId     String    @map("tag_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  post      Post      @relation("PostTags", fields: [postId], references: [id], onDelete: Cascade)
+  tag       Tag       @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@map("post_tags")
+}
+
+// ============================================
 // TAXONOMY TABLE (Goals & Outcomes)
 // ============================================
 
@@ -63,21 +98,27 @@ model Taxonomy {
 // ============================================
 
 model Post {
-  id          String        @id @default(uuid())
-  slug        String        @unique
-  titleVi     String        @map("title_vi")
-  titleEn     String?       @map("title_en")
-  contentVi   String        @map("content_vi")
-  contentEn   String?       @map("content_en")
-  excerptVi   String?       @map("excerpt_vi")
-  excerptEn   String?       @map("excerpt_en")
-  level       PostLevel?
-  readTime    Int?          @map("read_time")
-  featured    Boolean       @default(false)
-  published   Boolean       @default(false)
-  publishedAt DateTime?     @map("published_at")
-  createdAt   DateTime      @default(now()) @map("created_at")
-  updatedAt   DateTime      @updatedAt @map("updated_at")
+  id                   String              @id @default(uuid())
+  slug                 String              @unique
+  titleVi              String              @map("title_vi")
+  titleEn              String?             @map("title_en")
+  contentVi            String              @map("content_vi")
+  contentEn            String?             @map("content_en")
+  excerptVi            String?             @map("excerpt_vi")
+  excerptEn            String?             @map("excerpt_en")
+  level                PostLevel?
+  readTime             Int?                @map("read_time")
+  featured             Boolean             @default(false)
+  published            Boolean             @default(false)
+  publishedAt          DateTime?           @map("published_at")
+  coverImage           String?             @map("cover_image")              // Legacy: Supabase URL
+  coverImageS3Key      String?             @map("cover_image_s3_key")       // S3 object key
+  coverImageCdnUrl     String?             @map("cover_image_cdn_url")      // CloudFront CDN URL
+  coverImageFileSize   BigInt?             @map("cover_image_file_size")    // File size in bytes
+  coverImageWidth      Int?                @map("cover_image_width")        // Image width in pixels
+  coverImageHeight     Int?                @map("cover_image_height")       // Image height in pixels
+  createdAt            DateTime            @default(now()) @map("created_at")
+  updatedAt            DateTime            @updatedAt @map("updated_at")
 
   // Relations
   goal        Taxonomy?     @relation("PostGoal", fields: [goalId], references: [id], onDelete: SetNull)
@@ -85,8 +126,36 @@ model Post {
   outcome     Taxonomy?     @relation("PostOutcome", fields: [outcomeId], references: [id], onDelete: SetNull)
   outcomeId   String?       @map("outcome_id")
   relatedInsights Insight[] @relation("PostInsights")
+  tags        PostTag[]     @relation("PostTags")
+  versions    PostVersion[]
 
   @@map("posts")
+}
+
+// ============================================
+// POST VERSIONS TABLE
+// ============================================
+
+model PostVersion {
+  id           String   @id @default(uuid())
+  postId       String   @map("post_id")
+  titleVi      String   @map("title_vi")
+  titleEn      String?  @map("title_en")
+  contentVi    String   @map("content_vi")
+  contentEn    String?  @map("content_en")
+  excerptVi    String?  @map("excerpt_vi")
+  excerptEn    String?  @map("excerpt_en")
+  coverImage   String?  @map("cover_image")
+  changeReason String?  @map("change_reason")
+  version      Int      @default(1)
+  createdBy    String?  @map("created_by")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  // Relations
+  post         Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("post_versions")
+  @@index([postId])
 }
 
 // ============================================
@@ -116,8 +185,15 @@ model Insight {
 
 model Photo {
   id            String      @id @default(uuid())
-  url           String
-  thumbnailUrl  String?     @map("thumbnail_url")
+  url           String                    // Legacy: Supabase URL
+  s3Key         String?     @map("s3_key")         // S3 object key
+  s3Bucket      String?     @map("s3_bucket")      // S3 bucket name
+  cdnUrl        String?     @map("cdn_url")        // CloudFront CDN URL
+  fileSize      BigInt?     @map("file_size")      // File size in bytes
+  fileType      String?     @map("file_type")      // MIME type (image/webp, etc)
+  width         Int?        @map("width")          // Image width in pixels
+  height        Int?        @map("height")         // Image height in pixels
+  thumbnailUrl  String?     @map("thumbnail_url")  // Legacy: thumbnail URL
   captionVi     String?     @map("caption_vi")
   captionEn     String?     @map("caption_en")
   album         String?
@@ -188,8 +264,23 @@ model ResumeSection {
 // ============================================
 
 model Admin {
-  userId    String      @id @map("user_id")
+  profileId String      @id @map("profile_id")
   createdAt DateTime    @default(now()) @map("created_at")
 
   @@map("admins")
+}
+
+// ============================================
+// PROFILES TABLE (Username + Password Auth)
+// ============================================
+
+model Profile {
+  id           String    @id @default(uuid())
+  username     String    @unique
+  passwordHash String    @map("password_hash")
+  email        String?   // For reference only
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  @@map("profiles")
 }

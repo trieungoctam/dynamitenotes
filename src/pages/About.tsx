@@ -76,7 +76,7 @@ export default function About() {
     <main className="min-h-screen">
       {/* Header with gradient background */}
       <section className="relative overflow-hidden border-b border-border/30">
-        <div className="absolute inset-0 bg-gradient-to-b from-green-500/5 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
         <div className="container px-4 md:px-6 lg:px-8 py-12 md:py-16">
           <div className="relative">
             <h1 className="text-4xl md:text-5xl font-bold">{title}</h1>
@@ -93,25 +93,25 @@ export default function About() {
             {/* Profile Header */}
             <div className="flex items-center gap-6 mb-16">
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full blur-xl" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full blur-xl" />
                 <Avatar className="w-28 h-28 relative border-4 border-background">
                   <AvatarImage src="/profile.jpg" alt={title} />
-                  <AvatarFallback className="text-3xl bg-gradient-to-br from-blue-500/10 to-purple-500/10">
-                    <User className="w-14 h-14 text-blue-400" />
+                  <AvatarFallback className="text-3xl bg-gradient-to-br from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10">
+                    <User className="w-14 h-14 text-primary" />
                   </AvatarFallback>
                 </Avatar>
               </div>
               <div>
                 <h2 className="text-3xl font-bold mb-1">Dynamite</h2>
-                <p className="text-lg text-blue-400 font-medium">{subtitle}</p>
+                <p className="text-lg text-primary font-medium">{subtitle}</p>
               </div>
             </div>
 
             {/* Bio Section */}
             <div className="mb-16">
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
-                  <User className="w-5 h-5 text-blue-400" />
+                <div className="p-2 rounded-lg bg-primary/10 dark:bg-primary/20 border border-primary/20 dark:border-primary/30">
+                  <User className="w-5 h-5 text-primary" />
                 </div>
                 <h3 className="text-2xl font-bold">{bioTitle}</h3>
               </div>
@@ -128,8 +128,8 @@ export default function About() {
             {principles && (
               <div className="mb-16">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2 rounded-lg bg-purple-500/10 border border-purple-500/20">
-                    <Sparkles className="w-5 h-5 text-purple-400" />
+                  <div className="p-2 rounded-lg bg-primary/10 dark:bg-primary/20 border border-primary/20 dark:border-primary/30">
+                    <Sparkles className="w-5 h-5 text-primary" />
                   </div>
                   <h3 className="text-2xl font-bold">{principlesTitle}</h3>
                 </div>
@@ -143,8 +143,8 @@ export default function About() {
             {!principles && (
               <div className="mb-16">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2 rounded-lg bg-purple-500/10 border border-purple-500/20">
-                    <Sparkles className="w-5 h-5 text-purple-400" />
+                  <div className="p-2 rounded-lg bg-primary/10 dark:bg-primary/20 border border-primary/20 dark:border-primary/30">
+                    <Sparkles className="w-5 h-5 text-primary" />
                   </div>
                   <h3 className="text-2xl font-bold">{principlesTitle}</h3>
                 </div>
@@ -157,8 +157,8 @@ export default function About() {
             {/* Social Links */}
             <div className="mb-12">
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 rounded-lg bg-green-500/10 border border-green-500/20">
-                  <ExternalLink className="w-5 h-5 text-green-400" />
+                <div className="p-2 rounded-lg bg-primary/10 dark:bg-primary/20 border border-primary/20 dark:border-primary/30">
+                  <ExternalLink className="w-5 h-5 text-primary" />
                 </div>
                 <h3 className="text-2xl font-bold">{connectTitle}</h3>
               </div>
@@ -174,7 +174,7 @@ export default function About() {
                         href={url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex items-center gap-3 px-5 py-3 rounded-xl bg-gradient-to-br from-card to-card/50 border border-border/30 text-muted-foreground hover:text-blue-400 hover:border-blue-500/50 hover:bg-blue-500/10 transition-all duration-300"
+                        className="group flex items-center gap-3 px-5 py-3 rounded-xl bg-gradient-to-br from-card to-card/50 border border-border/30 text-muted-foreground hover:text-primary hover:border-primary/50 hover:bg-primary/10 dark:hover:bg-primary/20 transition-all duration-300"
                       >
                         <Icon className="w-5 h-5" />
                         <span className="capitalize font-medium">{platform}</span>

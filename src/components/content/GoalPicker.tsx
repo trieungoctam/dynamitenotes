@@ -54,26 +54,26 @@ const iconMap: Record<string, LucideIcon> = {
   performance: TrendingUp,
 };
 
-// Color mapping for goals
+// Color mapping for goals with dark mode support
 const colorMap: Record<string, string> = {
-  decide: "text-blue-500 bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20",
-  spec: "text-purple-500 bg-purple-500/10 border-purple-500/30 hover:bg-purple-500/20",
-  build: "text-orange-500 bg-orange-500/10 border-orange-500/30 hover:bg-orange-500/20",
-  ship: "text-green-500 bg-green-500/10 border-green-500/30 hover:bg-green-500/20",
-  measure: "text-cyan-500 bg-cyan-500/10 border-cyan-500/30 hover:bg-cyan-500/20",
-  operate: "text-gray-400 bg-gray-500/10 border-gray-500/30 hover:bg-gray-500/20",
+  decide: "text-blue-500 dark:text-blue-400 bg-blue-500/10 dark:bg-blue-500/20 border-blue-500/30 hover:bg-blue-500/20",
+  spec: "text-purple-500 dark:text-purple-400 bg-purple-500/10 dark:bg-purple-500/20 border-purple-500/30 hover:bg-purple-500/20",
+  build: "text-orange-500 dark:text-orange-400 bg-orange-500/10 dark:bg-orange-500/20 border-orange-500/30 hover:bg-orange-500/20",
+  ship: "text-green-500 dark:text-green-400 bg-green-500/10 dark:bg-green-500/20 border-green-500/30 hover:bg-green-500/20",
+  measure: "text-cyan-500 dark:text-cyan-400 bg-cyan-500/10 dark:bg-cyan-500/20 border-cyan-500/30 hover:bg-cyan-500/20",
+  operate: "text-gray-400 dark:text-gray-300 bg-gray-500/10 dark:bg-gray-500/20 border-gray-500/30 hover:bg-gray-500/20",
 };
 
-// Fallback colors for unknown goals
+// Fallback colors for unknown goals with dark mode support
 const fallbackColors = [
-  "text-blue-500 bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20",
-  "text-purple-500 bg-purple-500/10 border-purple-500/30 hover:bg-purple-500/20",
-  "text-orange-500 bg-orange-500/10 border-orange-500/30 hover:bg-orange-500/20",
-  "text-green-500 bg-green-500/10 border-green-500/30 hover:bg-green-500/20",
-  "text-cyan-500 bg-cyan-500/10 border-cyan-500/30 hover:bg-cyan-500/20",
-  "text-pink-500 bg-pink-500/10 border-pink-500/30 hover:bg-pink-500/20",
-  "text-yellow-500 bg-yellow-500/10 border-yellow-500/30 hover:bg-yellow-500/20",
-  "text-red-500 bg-red-500/10 border-red-500/30 hover:bg-red-500/20",
+  "text-blue-500 dark:text-blue-400 bg-blue-500/10 dark:bg-blue-500/20 border-blue-500/30 hover:bg-blue-500/20",
+  "text-purple-500 dark:text-purple-400 bg-purple-500/10 dark:bg-purple-500/20 border-purple-500/30 hover:bg-purple-500/20",
+  "text-orange-500 dark:text-orange-400 bg-orange-500/10 dark:bg-orange-500/20 border-orange-500/30 hover:bg-orange-500/20",
+  "text-green-500 dark:text-green-400 bg-green-500/10 dark:bg-green-500/20 border-green-500/30 hover:bg-green-500/20",
+  "text-cyan-500 dark:text-cyan-400 bg-cyan-500/10 dark:bg-cyan-500/20 border-cyan-500/30 hover:bg-cyan-500/20",
+  "text-pink-500 dark:text-pink-400 bg-pink-500/10 dark:bg-pink-500/20 border-pink-500/30 hover:bg-pink-500/20",
+  "text-yellow-500 dark:text-yellow-400 bg-yellow-500/10 dark:bg-yellow-500/20 border-yellow-500/30 hover:bg-yellow-500/20",
+  "text-red-500 dark:text-red-400 bg-red-500/10 dark:bg-red-500/20 border-red-500/30 hover:bg-red-500/20",
 ];
 
 interface GoalPickerProps {

@@ -36,6 +36,8 @@ const InsightEditor = lazy(() => import("./pages/admin/InsightEditor"));
 const SeriesAdmin = lazy(() => import("./pages/admin/SeriesAdmin"));
 const SeriesEditor = lazy(() => import("./pages/admin/SeriesEditor"));
 const PhotosAdmin = lazy(() => import("./pages/admin/PhotosAdmin"));
+const AboutAdmin = lazy(() => import("./pages/admin/AboutAdmin"));
+const ResumeAdmin = lazy(() => import("./pages/admin/ResumeAdmin"));
 
 // Loading fallback for lazy loaded routes
 function PageSkeleton() {
@@ -207,6 +209,26 @@ const App = () => {
                       <ProtectedRoute>
                         <Suspense fallback={<AdminSkeleton />}>
                           <PhotosAdmin />
+                        </Suspense>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/about"
+                    element={
+                      <ProtectedRoute>
+                        <Suspense fallback={<AdminSkeleton />}>
+                          <AboutAdmin />
+                        </Suspense>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/resume"
+                    element={
+                      <ProtectedRoute>
+                        <Suspense fallback={<AdminSkeleton />}>
+                          <ResumeAdmin />
                         </Suspense>
                       </ProtectedRoute>
                     }

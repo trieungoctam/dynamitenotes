@@ -1,6 +1,6 @@
 /**
  * AuthContext
- * Provides authentication state and admin check for the application.
+ * Provides authentication state and admin check using username/password login.
  */
 
 import {
@@ -11,32 +11,34 @@ import {
   type ReactNode,
 } from "react";
 import { supabase } from "@/lib/supabase";
-import type { User, Session } from "@supabase/supabase-js";
+import { hashPassword, verifyPassword } from "@/lib/crypto";
+import type { Profile } from "@/types/database";
 
 interface AuthContextType {
-  user: User | null;
-  session: Session | null;
+  user: Profile | null;
+  session: string | null;
   loading: boolean;
   isAdmin: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
+  signIn: (username: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const SESSION_KEY = "admin_session";
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
 
   // Check if user is admin by querying the admins table
-  const checkAdminStatus = async (userId: string) => {
+  const checkAdminStatus = async (profileId: string) => {
     try {
       const { data, error } = await supabase
         .from("admins")
-        .select("user_id")
-        .eq("user_id", userId)
+        .select("profile_id")
+        .eq("profile_id", profileId)
         .single();
 
       if (error && error.code !== "PGRST116") {
@@ -50,62 +52,65 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  // Load session from localStorage on mount
   useEffect(() => {
-    // Get initial session
-    const initSession = async () => {
+    const loadSession = async () => {
       try {
-        const {
-          data: { session: initialSession },
-        } = await supabase.auth.getSession();
+        const sessionData = localStorage.getItem(SESSION_KEY);
+        if (sessionData) {
+          const profileId = sessionData;
+          const { data: profile, error } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", profileId)
+            .single();
 
-        setSession(initialSession);
-        setUser(initialSession?.user ?? null);
-
-        if (initialSession?.user) {
-          const adminStatus = await checkAdminStatus(initialSession.user.id);
-          setIsAdmin(adminStatus);
+          if (profile && !error) {
+            setUser(profile);
+            const adminStatus = await checkAdminStatus(profile.id);
+            setIsAdmin(adminStatus);
+          } else {
+            // Invalid session, clear it
+            localStorage.removeItem(SESSION_KEY);
+          }
         }
       } catch (error) {
-        console.error("Error getting session:", error);
+        console.error("Error loading session:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    initSession();
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
-      setSession(newSession);
-      setUser(newSession?.user ?? null);
-
-      if (newSession?.user) {
-        const adminStatus = await checkAdminStatus(newSession.user.id);
-        setIsAdmin(adminStatus);
-      } else {
-        setIsAdmin(false);
-      }
-
-      setLoading(false);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
+    loadSession();
   }, []);
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (username: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      // Find user by username
+      const { data: profile, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("username", username)
+        .single();
 
-      if (error) {
-        return { error: new Error(error.message) };
+      if (error || !profile) {
+        return { error: new Error("Invalid username or password") };
       }
+
+      // Verify password
+      const isValid = await verifyPassword(password, profile.password_hash);
+
+      if (!isValid) {
+        return { error: new Error("Invalid username or password") };
+      }
+
+      // Set session
+      setUser(profile);
+      localStorage.setItem(SESSION_KEY, profile.id);
+
+      // Check admin status
+      const adminStatus = await checkAdminStatus(profile.id);
+      setIsAdmin(adminStatus);
 
       return { error: null };
     } catch (error) {
@@ -114,15 +119,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    setUser(null);
     setIsAdmin(false);
+    localStorage.removeItem(SESSION_KEY);
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        session,
+        session: user?.id || null,
         loading,
         isAdmin,
         signIn,

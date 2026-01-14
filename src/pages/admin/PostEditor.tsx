@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, Eye, Clock } from "lucide-react";
+import { ArrowLeft, Save, Eye, Clock, History, ChevronDown } from "lucide-react";
 import slugify from "slugify";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
@@ -30,6 +30,14 @@ import {
 } from "@/hooks/use-admin-posts";
 import { useUpload } from "@/hooks/use-upload";
 import { useTaxonomy } from "@/hooks/use-taxonomy";
+import { usePostVersions, useRollbackVersion } from "@/hooks/use-post-versions";
+import { VersionHistory } from "@/components/admin/VersionHistory";
+import { RollbackConfirmDialog } from "@/components/admin/RollbackConfirmDialog";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { toast } from "sonner";
 
 interface PostFormData {
@@ -79,11 +87,15 @@ export default function PostEditor() {
   const { upload, uploading } = useUpload("post-images");
   const { data: goals } = useTaxonomy("goal");
   const { data: outcomes } = useTaxonomy("outcome");
+  const { data: versions, isLoading: versionsLoading } = usePostVersions(isNew ? "" : id || "");
+  const rollbackVersion = useRollbackVersion();
 
   const [formData, setFormData] = useState<PostFormData>(initialFormData);
   const [saving, setSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [hasChanges, setHasChanges] = useState(false);
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [rollbackVersionId, setRollbackVersionId] = useState<string | null>(null);
   const autoSaveRef = useRef<NodeJS.Timeout | null>(null);
 
   // Load post data when editing
@@ -199,6 +211,17 @@ export default function PostEditor() {
   const handlePreview = () => {
     if (formData.slug) {
       window.open(`/posts/${formData.slug}`, "_blank");
+    }
+  };
+
+  // Handle rollback to version
+  const handleRollback = async (versionId: string) => {
+    try {
+      await rollbackVersion.mutateAsync({ postId: id!, versionId });
+      toast.success("Rolled back to previous version");
+      setRollbackVersionId(null);
+    } catch {
+      toast.error("Failed to rollback");
     }
   };
 
@@ -455,9 +478,53 @@ export default function PostEditor() {
                 />
               </div>
             </div>
+
+            {/* Version History - Only show when editing */}
+            {!isNew && (
+              <Collapsible
+                open={showVersionHistory}
+                onOpenChange={setShowVersionHistory}
+                className="p-4 border rounded-lg space-y-4"
+              >
+                <CollapsibleTrigger className="flex items-center justify-between w-full">
+                  <div className="flex items-center gap-2 font-semibold">
+                    <History className="w-4 h-4" />
+                    <span>Version History</span>
+                  </div>
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform ${
+                      showVersionHistory ? "rotate-180" : ""
+                    }`}
+                  />
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <VersionHistory
+                    versions={versions || []}
+                    currentPost={{
+                      title_vi: formData.title_vi,
+                      content_vi: formData.content_vi,
+                      excerpt_vi: formData.excerpt_vi,
+                      cover_image: formData.cover_image || null,
+                    }}
+                    onRollback={(versionId) => setRollbackVersionId(versionId)}
+                    isLoading={versionsLoading}
+                  />
+                </CollapsibleContent>
+              </Collapsible>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Rollback Confirmation Dialog */}
+      {rollbackVersionId && versions && (
+        <RollbackConfirmDialog
+          version={versions.find((v) => v.id === rollbackVersionId)!}
+          onConfirm={() => handleRollback(rollbackVersionId)}
+          open={!!rollbackVersionId}
+          onOpenChange={(open) => !open && setRollbackVersionId(null)}
+        />
+      )}
     </AdminLayout>
   );
 }
