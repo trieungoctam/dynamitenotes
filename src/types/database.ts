@@ -330,7 +330,7 @@ export type Database = {
       resume_sections: {
         Row: {
           id: string;
-          type: "highlight" | "experience" | "project" | "writing" | "speaking";
+          type: "highlight" | "experience" | "education" | "skill" | "certification" | "project" | "writing" | "speaking";
           title_vi: string;
           title_en: string | null;
           content: Json;
@@ -340,7 +340,7 @@ export type Database = {
         };
         Insert: {
           id?: string;
-          type: "highlight" | "experience" | "project" | "writing" | "speaking";
+          type: "highlight" | "experience" | "education" | "skill" | "certification" | "project" | "writing" | "speaking";
           title_vi: string;
           title_en?: string | null;
           content: Json;
@@ -350,7 +350,7 @@ export type Database = {
         };
         Update: {
           id?: string;
-          type?: "highlight" | "experience" | "project" | "writing" | "speaking";
+          type?: "highlight" | "experience" | "education" | "skill" | "certification" | "project" | "writing" | "speaking";
           title_vi?: string;
           title_en?: string | null;
           content?: Json;

@@ -21,7 +21,7 @@ function generateUUID(): string {
 
 export type ResumeSection = {
   id: string;
-  type: "highlight" | "experience" | "project" | "writing" | "speaking";
+  type: "highlight" | "experience" | "education" | "skill" | "certification" | "project" | "writing" | "speaking";
   title_vi: string;
   title_en: string | null;
   content: Record<string, unknown>;

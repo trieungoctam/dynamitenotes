@@ -29,6 +29,9 @@ enum PostLevel {
 enum ResumeSectionType {
   highlight
   experience
+  education
+  skill
+  certification
   project
   writing
   speaking
