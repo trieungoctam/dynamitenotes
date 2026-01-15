@@ -2,6 +2,7 @@
  * MermaidDiagram Component
  *
  * Renders Mermaid diagrams from markdown code blocks.
+ * Uses a separate container for Mermaid SVG to avoid React DOM conflicts.
  * Supports dark/light theme switching.
  */
 
@@ -12,62 +13,62 @@ interface MermaidDiagramProps {
   theme?: "default" | "dark" | "neutral" | "forest";
 }
 
-// Initialize mermaid once at module level
-let mermaidInitialized = false;
-let mermaidInstance: any = null;
+// Track mermaid module separately from instances
+let mermaidModule: any = null;
+const mermaidInitialized = new Set<string>();
 
 async function getMermaid() {
-  if (!mermaidInstance) {
-    mermaidInstance = await import("mermaid");
+  if (!mermaidModule) {
+    mermaidModule = await import("mermaid");
   }
-  return mermaidInstance.default;
+  return mermaidModule.default;
 }
 
 export function MermaidDiagram({
   chart,
   theme = "default",
 }: MermaidDiagramProps) {
-  const ref = useRef<HTMLDivElement>(null);
+  // Use separate ref for Mermaid container - React won't touch its children
+  const containerRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [svgContent, setSvgContent] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
+    const controller = new AbortController();
 
     async function renderDiagram() {
-      if (!ref.current) return;
-
       try {
         setLoading(true);
         setError(null);
 
         const mermaid = await getMermaid();
 
-        // Initialize mermaid once
-        if (!mermaidInitialized) {
+        // Initialize per theme if not already done
+        const themeKey = `mermaid-${theme}`;
+        if (!mermaidInitialized.has(themeKey)) {
           mermaid.initialize({
             startOnLoad: false,
             theme,
             securityLevel: "loose",
             logLevel: "error",
           });
-          mermaidInitialized = true;
+          mermaidInitialized.add(themeKey);
         }
 
         // Generate unique ID
         const id = `mermaid-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
 
-        // Render diagram
         const { svg } = await mermaid.render(id, chart);
 
-        if (isMounted && ref.current) {
-          ref.current.innerHTML = svg;
+        if (isMounted && !controller.signal.aborted) {
+          setSvgContent(svg);
           setLoading(false);
         }
       } catch (err) {
-        if (isMounted) {
-          console.error("Mermaid render error:", err);
-          setError(err instanceof Error ? err.message : "Failed to render diagram");
+        if (isMounted && !controller.signal.aborted) {
+          setError(err instanceof Error ? err.message : String(err));
           setLoading(false);
         }
       }
@@ -77,8 +78,16 @@ export function MermaidDiagram({
 
     return () => {
       isMounted = false;
+      controller.abort();
     };
   }, [chart, theme]);
+
+  // Inject SVG into container via ref to avoid React DOM conflicts
+  useEffect(() => {
+    if (containerRef.current && svgContent) {
+      containerRef.current.innerHTML = svgContent;
+    }
+  }, [svgContent]);
 
   if (error) {
     return (
@@ -96,20 +105,16 @@ export function MermaidDiagram({
     );
   }
 
-  if (loading) {
-    return (
-      <div className="my-6 flex items-center justify-center p-8">
-        <div className="text-sm text-muted-foreground">Loading diagram...</div>
-      </div>
-    );
-  }
-
   return (
-    <div
-      ref={ref}
-      className="my-6 flex justify-center overflow-x-auto"
-      role="img"
-      aria-label="Mermaid diagram"
-    />
+    <div className="my-6 flex justify-center overflow-x-auto" role="img" aria-label="Mermaid diagram">
+      {loading ? (
+        <div className="flex items-center justify-center p-8">
+          <div className="text-sm text-muted-foreground">Loading diagram...</div>
+        </div>
+      ) : (
+        // Empty container for Mermaid SVG - React doesn't manage children
+        <div ref={containerRef} />
+      )}
+    </div>
   );
 }
