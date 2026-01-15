@@ -26,6 +26,7 @@ const Search = lazy(() => import("./pages/Search"));
 const Login = lazy(() => import("./pages/Login"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const ShaderExamplePage = lazy(() => import("./components/ShaderExample"));
+const MermaidTest = lazy(() => import("./pages/__test__/MermaidTest"));
 
 // Admin pages - lazy loaded for better performance
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
@@ -235,6 +236,7 @@ const App = () => {
                   />
 
                   <Route path="/shader-example" element={<Suspense fallback={<PageSkeleton />}><ShaderExamplePage /></Suspense>} />
+                  <Route path="/test/mermaid" element={<Suspense fallback={<PageSkeleton />}><MermaidTest /></Suspense>} />
                   {/* 404 */}
                   <Route path="*" element={<Suspense fallback={<PageSkeleton />}><NotFound /></Suspense>} />
                 </Routes>
