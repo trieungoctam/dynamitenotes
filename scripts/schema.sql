@@ -137,7 +137,7 @@ CREATE TABLE IF NOT EXISTS about (
 -- ============================================
 CREATE TABLE IF NOT EXISTS resume_sections (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid(),
-  type TEXT NOT NULL CHECK (type IN ('highlight', 'experience', 'project', 'writing', 'speaking')),
+  type TEXT NOT NULL CHECK (type IN ('highlight', 'experience', 'project', 'writing', 'speaking', 'education', 'skill', 'certification')),
   title_vi TEXT NOT NULL,
   title_en TEXT,
   content JSONB NOT NULL,
